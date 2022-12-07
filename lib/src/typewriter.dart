@@ -51,10 +51,10 @@ class TypewriterAnimatedText extends AnimatedText {
   }
 
   @override
-  Widget completeText(BuildContext context) => RichText(
-        text: TextSpan(
+  Widget completeText(BuildContext context) => Text.rich(
+        TextSpan(
           children: [
-            TextSpan(text: text),
+            TextSpan(text: text, style: textStyle),
             TextSpan(
               text: cursor,
               style: const TextStyle(color: Colors.transparent),
@@ -86,17 +86,16 @@ class TypewriterAnimatedText extends AnimatedText {
       visibleString = textCharacters.take(typewriterValue).toString();
     }
 
-    return RichText(
-      text: TextSpan(
+    return Text.rich(
+      TextSpan(
         children: [
-          TextSpan(text: visibleString),
+          TextSpan(text: visibleString, style: textStyle),
           TextSpan(
             text: cursor,
             style:
                 showCursor ? null : const TextStyle(color: Colors.transparent),
           )
         ],
-        style: DefaultTextStyle.of(context).style.merge(textStyle),
       ),
       textAlign: textAlign,
     );
