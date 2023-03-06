@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'animated_text.dart';
 
 /// Animated Text that displays a [Text] element as if it is being typed one
@@ -22,6 +23,9 @@ class TypewriterAnimatedText extends AnimatedText {
   /// Cursor text. Defaults to underscore.
   final String cursor;
 
+  /// Callback for every character change
+  final Function(String)? onCharacterChange;
+
   TypewriterAnimatedText(
     String text, {
     TextAlign textAlign = TextAlign.start,
@@ -29,6 +33,7 @@ class TypewriterAnimatedText extends AnimatedText {
     this.speed = const Duration(milliseconds: 30),
     this.curve = Curves.linear,
     this.cursor = '_',
+    this.onCharacterChange,
   }) : super(
           text: text,
           textAlign: textAlign,
@@ -37,6 +42,7 @@ class TypewriterAnimatedText extends AnimatedText {
         );
 
   late Animation<double> _typewriterText;
+  String _lastString = '';
 
   @override
   Duration get remaining =>
@@ -84,6 +90,12 @@ class TypewriterAnimatedText extends AnimatedText {
       showCursor = (typewriterValue - textLen) % 2 == 0;
     } else {
       visibleString = textCharacters.take(typewriterValue).toString();
+      if (visibleString != _lastString) {
+        _lastString = visibleString;
+        if (onCharacterChange != null) {
+          onCharacterChange!(_lastString);
+        }
+      }
     }
 
     return Text.rich(
